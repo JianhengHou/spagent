@@ -25,7 +25,7 @@ Full list of supported external expert models in SPAgent, their default ports, a
 | **Sora** | Video | Text/Image-to-Video | API (no server) | OpenAI Sora; requires `OPENAI_API_KEY`; t2v, i2v, 1:1 aspect ratio |
 | **WAN** | Video | Text/Image-to-Video | API (no server) | Alibaba Wan via DashScope API; requires `DASHSCOPE_API_KEY` |
 | **VACE** | Video | Local First-Frame Video Generation | Local server (20035) | Wan2.1-VACE; one reference image + text → `.mp4`; no cloud API |
-| **WildDet3D** | 3D | Promptable 3D Object Detection | Local (no server) | Text/box/point prompts; requires `WILDDET3D_ROOT` and `WILDDET3D_CHECKPOINT` env vars |
+| **WildDet3D** | 3D | Promptable 3D Object Detection | Local / server (20027) | Text/box/point prompts; requires `WILDDET3D_ROOT` and `WILDDET3D_CHECKPOINT` env vars |
 | **FlowSeek** | 2D | Optical Flow Estimation | Local / server (20036) | Dense per-pixel motion between two images; M (ViT-B) or T (ViT-S) variants |
 | **PaddleOCR-VL-1.5** | OCR | Document OCR & Structured Recognition | Local or server (20037) | Plain OCR, table, chart, formula→LaTeX, seal recognition; auto-downloads from HuggingFace |
 | **OneFormer** | 2D | Universal Image Segmentation | Local / server (20038) | semantic / instance / panoptic; HF auto-download; returns mask_path |
@@ -45,6 +45,7 @@ Full list of supported external expert models in SPAgent, their default ports, a
 | 20033 | MapAnything |
 | 20034 | OrientAnythingV2 |
 | 20035 | VACE |
+| 20027 | WildDet3D |
 | 20036 | FlowSeek |
 | 20037 | PaddleOCR-VL-1.5 |
 | 20038 | OneFormer |

@@ -51,6 +51,9 @@ Usage:
     # Test WildDet3D (mock mode, no GPU or env vars needed)
     python test/test_tool.py --tool wilddet3d --image assets/dog.jpeg --prompt "dog" --use_mock
 
+    # Test WildDet3D (server mode)
+    python test/test_tool.py --tool wilddet3d --image assets/dog.jpeg --prompt "dog" --server_url http://localhost:20027
+
     # Test FlowSeek optical flow (real, local inference — requires FLOWSEEK_ROOT)
     python test/test_tool.py --tool flowseek --image assets/frame1.jpg assets/frame2.jpg
 
@@ -713,6 +716,7 @@ def test_wilddet3d(
     device: str = "cuda",
     use_mock: bool = False,
     output_dir: str = "outputs/tool_test",
+    server_url: Optional[str] = None,
 ) -> Optional[str]:
     """
     Directly test WildDet3D promptable 3D object detection tool.
@@ -744,7 +748,7 @@ def test_wilddet3d(
     logger.info(f"  Output dir       : {output_dir}")
     logger.info("-" * 60)
 
-    tool = WildDet3DTool(device=device, use_mock=use_mock)
+    tool = WildDet3DTool(device=device, use_mock=use_mock, server_url=server_url)
     result = tool.call(image_path=image_path, prompt_text=prompt_text)
 
     if not result.get("success"):
@@ -1202,6 +1206,7 @@ def main():
             device=args.device,
             use_mock=args.use_mock,
             output_dir=args.output_dir,
+            server_url=args.server_url,
         )
 
     elif args.tool == "flowseek":

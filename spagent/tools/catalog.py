@@ -81,6 +81,7 @@ DEFAULT_SERVER_URLS: Dict[str, str] = {
     "yoloe": "http://127.0.0.1:8000",
     "supervision": "http://127.0.0.1:8000",
     "oneformer": "http://127.0.0.1:20038",
+    "wilddet3d": "http://127.0.0.1:20027",
 }
 
 
@@ -296,7 +297,7 @@ TOOL_CATALOG: List[ToolCatalogEntry] = [
         WildDet3DTool,
         "3d",
         "wilddet3d_tool",
-        {},
+        {"server_url": DEFAULT_SERVER_URLS["wilddet3d"]},
         category="detection",
     ),
 ]

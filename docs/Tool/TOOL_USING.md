@@ -30,7 +30,7 @@ external_experts/
 ├── Veo/                           # Google Veo video generation (API-based)
 ├── Sora/                          # OpenAI Sora video generation (API-based)
 ├── vace/                          # VACE local video generation (first-frame pipeline, server port 20034)
-├── WildDet3D/                     # Promptable 3D object detection (local, no server)
+├── WildDet3D/                     # Promptable 3D object detection (local or server port 20027)
 ├── FlowSeek/                      # Optical flow estimation between image pairs (local or server port 20036)
 ├── PaddleOCRVL/                   # Document OCR & structured recognition (PaddleOCR-VL-1.5, port 20037)
 ├── OneFormer/                     # Universal image segmentation semantic/instance/panoptic (port 20038)
@@ -60,7 +60,7 @@ external_experts/
 | **Sora** | `SoraTool` | Video Generation | Text-to-video and image-to-video via OpenAI Sora | API (no server) | `prompt`, `image_path`(optional), `duration`, `resolution`, `aspect_ratio` |
 | **Orient Anything V2** | `OrientAnythingV2Tool` | Object Orientation & Rotation Estimation | Estimate absolute orientation (azimuth/elevation/rotation, symmetry_alpha) and relative pose between two views (NeurIPS 2025 Spotlight) | Server (port 20034) | `image_path`, `task`, `image_path2`(optional) |
 | **VACE** | `VaceTool` | Local Video Generation | Generate a short video from one reference image + text prompt via the local Wan2.1-VACE first-frame pipeline; returns `.mp4` path | Server (port 20034) | `image_path`, `prompt`, `base`(optional), `task`(optional), `mode`(optional) |
-| **WildDet3D** | `WildDet3DTool` | Promptable 3D Object Detection | Detect and localize objects in 2D and 3D from a single RGB image; supports text, box, and point prompts; requires `WILDDET3D_ROOT` and `WILDDET3D_CHECKPOINT` env vars | Local (no server) | `image_path`, `prompt_text`(optional), `input_boxes`(optional), `input_points`(optional) |
+| **WildDet3D** | `WildDet3DTool` | Promptable 3D Object Detection | Detect and localize objects in 2D and 3D from a single RGB image; supports text, box, and point prompts; requires `WILDDET3D_ROOT` and `WILDDET3D_CHECKPOINT` env vars | Local / Server (port 20027) | `image_path`, `prompt_text`(optional), `input_boxes`(optional), `input_points`(optional) |
 | **FlowSeek** | `FlowSeekTool` | Optical Flow Estimation | Estimate dense per-pixel motion between two images (consecutive frames or before/after pairs); returns colorized flow visualization; M variant (ViT-B) or T variant (ViT-S); source vendored in repo, requires `FLOWSEEK_CHECKPOINT` and `FLOWSEEK_DAV2_CHECKPOINT` env vars | Local / Server (port 20036) | `image1_path`, `image2_path`, `output_path`(optional) |
 | **PaddleOCR-VL-1.5** | `PaddleOCRVLTool` | Document OCR & Structured Recognition | 0.9B VLM for plain OCR, table parsing, chart reading, formula → LaTeX, text spotting, and seal recognition; supports local/server/mock; no checkpoint env var required | Local or Server (port 20037) | `image_path`, `task` ("ocr" / "table" / "chart" / "formula" / "spotting" / "seal") |
 | **OneFormer** | `OneFormerTool` | Universal Image Segmentation | Single model for semantic / instance / panoptic; HF auto-download; returns colorized overlay + mask_path id-map | Local / Server (port 20038) | `image_path`, `task` ("semantic" / "instance" / "panoptic") |
@@ -1268,6 +1268,25 @@ print(result["answer"])
   "output_path": "outputs/wilddet3d_image.png",
   "description": "WildDet3D detected 1 object(s) matching 'chair'."
 }
+```
+
+
+**Usage (server mode)**:
+
+```bash
+python spagent/external_experts/WildDet3D/wilddet3d_server.py \
+    --checkpoint $WILDDET3D_CHECKPOINT --port 20027
+```
+
+```python
+tools = [WildDet3DTool(server_url="http://localhost:20027")]
+```
+
+**Test (server mode)**:
+
+```bash
+python test/test_tool.py --tool wilddet3d --image assets/dog.jpeg --prompt "dog" \
+    --server_url http://localhost:20027
 ```
 
 **Note**: Use `GENERAL_VISION_SYSTEM_PROMPT` (not `SPATIAL_3D_SYSTEM_PROMPT`) with WildDet3D to avoid the LLM confusing its parameters with Pi3-style angle arguments.
